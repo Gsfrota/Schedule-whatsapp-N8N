@@ -1,0 +1,49 @@
+# Arquivos e diretórios do Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform.lock.hcl
+
+# Chaves SSH e arquivos sensíveis
+*.pem
+*.key
+*.pub
+*.crt
+*.csr
+*.enc
+*.jks
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+*.env
+.env*
+
+# Arquivos temporários ou de sistema
+*.swp
+*.swo
+*.DS_Store
+*.log
+*.bak
+*.tmp
+~$*
+
+# VSCode / IDEs
+.vscode/
+.idea/
+*.code-workspace
+
+# Sistema macOS
+.DS_Store
+
+# Arquivos de zipagens manuais ou automáticas
+*.zip
+*.tar
+*.gz
+*.rar
