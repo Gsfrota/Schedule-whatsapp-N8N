@@ -12,3 +12,11 @@ variable "ssh_public_key_path" {
   type        = string
   description = "Caminho da chave pública local (ex: ~/.ssh/id_rsa.pub)"
 }
+variable "tags" {
+  type = map(string)
+  default = {
+    Owner       = "guilherme.frota"
+    Environment = "dev"
+    Project     = "Schedule-N8N"
+  }
+}

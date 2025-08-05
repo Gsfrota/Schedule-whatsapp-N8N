@@ -27,9 +27,13 @@ resource "aws_security_group" "n8n_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = {
-    Name = "n8n-dev-sg"
-    Environment = var.environment
-    Project     = "n8n-Automation"   
-  }
+  tags = merge(
+    {
+      Name        = "n8n-dev-sg"
+      Environment = var.environment
+      Project     = "n8n-Automation"
+      Module      = var.module
+    },
+    var.tags
+  )
 }

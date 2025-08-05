@@ -28,6 +28,18 @@ module "compute" {
   security_group_id   = module.security.security_group_id
   ssh_key_name        = var.ssh_key_name
   ssh_public_key_path = var.ssh_public_key_path
+  workflow_bucket     = module.compute.workflow_bucket
   environment         = "dev"
   module              = "compute"
+}
+module "s3" {
+  source      = "../../modules/s3"
+  bucket_name = "n8n-workflows-dev"
+  tags        = var.tags
+}
+module "iam" {
+  source       = "../../modules/iam"
+  role_name    = "n8n-dev-role"
+  bucket_name  = module.s3.bucket_name
+  tags         = var.tags
 }

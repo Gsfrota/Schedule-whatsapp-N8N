@@ -1,13 +1,12 @@
 resource "aws_ecs_cluster" "this" {
   name = "ecs-${var.environment}"
-  tags = local.default_tags
+  tags = var.tags
 }
 
 resource "aws_ecs_cluster_capacity_providers" "this" {
   cluster_name = aws_ecs_cluster.this.name
   capacity_providers = var.enable_spot ? ["FARGATE", "FARGATE_SPOT"] : ["FARGATE"]
 }
-
 
 resource "aws_ecs_task_definition" "this" {
   family                   = "n8n-${var.environment}"
@@ -27,7 +26,7 @@ resource "aws_ecs_task_definition" "this" {
     }]
   }])
 
-  tags = local.default_tags
+  tags = var.tags
 }
 
 resource "aws_ecs_service" "this" {
@@ -43,7 +42,7 @@ resource "aws_ecs_service" "this" {
     assign_public_ip = true
   }
 
-  tags = local.default_tags
+  tags = var.tags
 }
 
 resource "aws_appautoscaling_target" "this" {
@@ -85,13 +84,14 @@ resource "aws_iam_role" "exec_role" {
     }]
   })
 
-  tags = local.default_tags
+  tags = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "ecs_exec_attach" {
   role       = aws_iam_role.exec_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
+
 resource "aws_lb" "this" {
   name               = "alb-${var.environment}"
   internal           = false
@@ -99,7 +99,7 @@ resource "aws_lb" "this" {
   security_groups    = var.security_groups
   subnets            = var.subnets
 
-  tags = local.default_tags
+  tags = var.tags
 }
 
 resource "aws_lb_target_group" "this" {
@@ -119,8 +119,9 @@ resource "aws_lb_target_group" "this" {
     path                = "/"
   }
 
-  tags = local.default_tags
+  tags = var.tags
 }
+
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.this.arn
   port              = 80

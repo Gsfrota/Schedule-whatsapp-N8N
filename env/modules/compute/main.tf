@@ -18,6 +18,15 @@ resource "aws_key_pair" "this" {
   public_key = file(var.ssh_public_key_path)
 }
 
+data "template_file" "user_data" {
+  template = file("${path.module}/user_data.sh.tpl")
+  vars = {
+    ecr_url = module.ecr.repository_url
+    region  = var.aws_region
+    workflow_bucket = "n8n-workflows-dev"
+  }
+}
+
 resource "aws_instance" "n8n_dev" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t3.micro"
@@ -26,24 +35,7 @@ resource "aws_instance" "n8n_dev" {
   associate_public_ip_address = true
   key_name                    = aws_key_pair.this.key_name
 
-  user_data = <<-EOF
-    #!/bin/bash
-    apt update -y
-    apt install -y docker.io docker-compose
-    docker run -d \
-    -e N8N_HOST=0.0.0.0 \
-    -e N8N_PORT=5678 \
-    -e N8N_RUNNERS_ENABLED=true \
-    -p 5678:5678 \
-    -v n8n_data:/home/node/.n8n \
-    --name n8n \
-    n8nio/n8n
-  EOF
+  user_data = data.template_file.user_data.rendered
 
-  tags = {
-    Name = "n8n-dev-instance"
-    Environment = var.environment
-    Project     = "n8n-Automation"
-    Module      = var.module
-  }
+  tags = var.tags
 }

@@ -1,5 +1,7 @@
 variable "aws_region" {
   type = string
+  default = "sa-east-1"
+  
 }
 
 variable "vpc_id" {
@@ -32,3 +34,16 @@ variable "module" {
   type        = string
   description = "compute"
 }
+variable "workflow_bucket" {
+  description = "The name of the workflow S3 bucket"
+  type        = string
+}
+variable "tags" {
+  type = map(string)
+  default = {
+    Owner       = "guilherme.frota"
+    Environment = "dev"
+    Project     = "Schedule-N8N"
+  }
+}
+

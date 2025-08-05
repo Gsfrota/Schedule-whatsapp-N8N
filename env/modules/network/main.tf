@@ -3,17 +3,29 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
   enable_dns_hostnames = true
 
-  tags = {
-    Name = "n8n-dev-vpc"
-  }
+  tags = merge(
+    {
+      Name        = "n8n-dev-vpc"
+      Environment = var.environment
+      Project     = "n8n-Automation"
+      Module      = var.module
+    },
+    var.tags
+  )
 }
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
 
-  tags = {
-    Name = "n8n-igw"
-  }
+  tags = merge(
+    {
+      Name        = "n8n-igw"
+      Environment = var.environment
+      Project     = "n8n-Automation"
+      Module      = var.module
+    },
+    var.tags
+  )
 }
 
 resource "aws_subnet" "public" {
@@ -25,12 +37,12 @@ resource "aws_subnet" "public" {
   tags = merge(
     {
       Name = "n8n-public-subnet"
-    },
-    {
       Environment = var.environment
       Project     = "n8n-Automation"
       Module      = var.module
-    })
+    },
+    var.tags
+  )
 }
 
 resource "aws_route_table" "public_rt" {
@@ -41,9 +53,15 @@ resource "aws_route_table" "public_rt" {
     gateway_id = aws_internet_gateway.igw.id
   }
 
-  tags = {
-    Name = "n8n-public-rt"
-  }
+  tags = merge(
+    {
+      Name        = "n8n-public-rt"
+      Environment = var.environment
+      Project     = "n8n-Automation"
+      Module      = var.module
+    },
+    var.tags
+  )
 }
 
 resource "aws_route_table_association" "public_assoc" {
