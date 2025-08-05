@@ -38,6 +38,9 @@ variable "workflow_bucket" {
   description = "The name of the workflow S3 bucket"
   type        = string
 }
+variable "iam_instance_profile" {
+  type = string
+}
 variable "tags" {
   type = map(string)
   default = {

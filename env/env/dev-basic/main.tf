@@ -29,6 +29,7 @@ module "compute" {
   ssh_key_name        = var.ssh_key_name
   ssh_public_key_path = var.ssh_public_key_path
   workflow_bucket     = module.compute.workflow_bucket
+  iam_instance_profile = module.iam.instance_profile_name
   environment         = "dev"
   module              = "compute"
 }
