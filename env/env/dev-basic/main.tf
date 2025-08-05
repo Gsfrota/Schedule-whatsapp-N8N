@@ -32,15 +32,15 @@ module "compute" {
   iam_instance_profile = module.iam.instance_profile_name
   environment         = "dev"
   module              = "compute"
+  n8n_password        = var.n8n_password
+  
+
 }
-module "s3" {
-  source      = "../../modules/s3"
-  bucket_name = "n8n-workflows-dev"
-  tags        = var.tags
-}
+
 module "iam" {
   source       = "../../modules/iam"
   role_name    = "n8n-dev-role"
-  bucket_name  = module.s3.bucket_name
+  bucket_name  = "n8n-workflows-dev"
   tags         = var.tags
+  create_instance_profile = false
 }

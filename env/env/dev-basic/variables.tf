@@ -20,3 +20,7 @@ variable "tags" {
     Project     = "Schedule-N8N"
   }
 }
+variable "n8n_password" {
+  type      = string
+  sensitive = true
+}
