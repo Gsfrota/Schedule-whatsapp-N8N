@@ -16,16 +16,17 @@ data "aws_ami" "ubuntu" {
 resource "aws_key_pair" "this" {
   key_name   = var.ssh_key_name
   public_key = file(var.ssh_public_key_path)
+  
 }
 
-data "template_file" "user_data" {
-  template = file("${path.module}/user_data.sh.tpl")
-  vars = {
-    ecr_url = module.ecr.repository_url
+locals {
+    user_data = templatefile("${path.module}/user_data.sh.tpl", {
     region  = var.aws_region
-    workflow_bucket = "n8n-workflows-dev"
-  }
+    workflow_bucket = var.workflow_bucket
+
+  })
 }
+
 
 resource "aws_instance" "n8n_dev" {
   ami                         = data.aws_ami.ubuntu.id
@@ -35,7 +36,7 @@ resource "aws_instance" "n8n_dev" {
   associate_public_ip_address = true
   key_name                    = aws_key_pair.this.key_name
 
-  user_data = data.template_file.user_data.rendered
+  user_data = local.user_data
 
   tags = var.tags
 }
