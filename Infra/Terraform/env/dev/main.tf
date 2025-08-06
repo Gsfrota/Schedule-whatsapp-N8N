@@ -4,7 +4,7 @@ provider "aws" {
 }
 
 module "network" {
-  source              = "./modules/network"
+  source              = "../../modules/network"
   vpc_cidr            = "10.0.0.0/16"
   public_subnet_cidr  = "10.0.1.0/24"
   availability_zone   = "${var.aws_region}a"
@@ -14,14 +14,14 @@ module "network" {
 }
 
 module "security" {
-  source  = "./modules/security"
+  source  = "../../modules/security"
   vpc_id  = module.network.vpc_id
   environment = "dev"
   module      = "security"
 }
 
 module "compute" {
-  source              = "./modules/compute"
+  source              = "../../modules/compute"
   aws_region          = var.aws_region
   vpc_id              = module.network.vpc_id
   subnet_id           = module.network.subnet_id
@@ -38,7 +38,7 @@ module "compute" {
 }
 
 module "iam" {
-  source       = "./modules/iam"
+  source       = "../../modules/iam"
   role_name    = "n8n-dev-role"
   bucket_name  = "n8n-workflows-dev"
   tags         = var.tags
@@ -46,7 +46,7 @@ module "iam" {
 }
 
 module "ecr_n8n_custom" {
-  source           = "./modules/ecr"
+  source           = "../../modules/ecr"
   repository_name  = "n8n-custom"
   tags             = var.tags
 }
